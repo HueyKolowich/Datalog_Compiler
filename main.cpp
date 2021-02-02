@@ -24,6 +24,7 @@ bool lexerTests(bool argv1, char* argv1_c)
     cout << "Begin Testing for Lexer..." << endl;
 
     Lexer* lexy = new Lexer();
+    string testInput;
 
     cout << "######################################" << endl;
 
@@ -31,16 +32,25 @@ bool lexerTests(bool argv1, char* argv1_c)
     {
         cout << "Testing toString..." << endl;
 
-        string testInput = lexy->inputToString(argv1_c);
+        testInput = lexy->inputToString(argv1_c);
 
         cout << "String: " << testInput << endl;
+    } else
+    {
+        testInput = "";
     }
     
     cout << "Testing run..." << endl;
 
-    bool testRun = lexy->run("Hello");
+    bool testRun = lexy->run(testInput);
 
     cout << "Run output: " << testRun << endl;
+
+    cout << "Testing output..." << endl;
+
+    bool testOutput = lexy->output();
+
+    cout << "Output's output: " << testOutput << endl;
 
     //delete lexy;
     cout << "Testing Complete." << endl;

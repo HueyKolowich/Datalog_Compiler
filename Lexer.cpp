@@ -3,6 +3,43 @@
 
 #include "Lexer.h"
 
+Lexer::Lexer() 
+{
+    tokens = vector<Token*>();
+    automata = vector<Automaton*>();
+
+    Automaton* COMMA = new MatcherAutomaton(",", "COMMA");
+    Automaton* PERIOD = new MatcherAutomaton(".", "PERIOD");
+    Automaton* Q_MARK = new MatcherAutomaton("?", "Q_MARK");
+    Automaton* LEFT_PAREN = new MatcherAutomaton("(", "LEFT_PAREN");
+    Automaton* RIGHT_PAREN = new MatcherAutomaton(")", "RIGHT_PAREN");
+    Automaton* COLON = new MatcherAutomaton(":", "COLON");
+    Automaton* COLON_DASH = new MatcherAutomaton(":-", "COLON_DASH");
+    Automaton* MULTIPLY = new MatcherAutomaton("*", "MULTIPLY");
+    Automaton* ADD = new MatcherAutomaton("+", "ADD");
+    Automaton* SCHEMES = new MatcherAutomaton("Schemes", "SCHEMES");
+    Automaton* FACTS = new MatcherAutomaton("Facts", "FACTS");
+    Automaton* RULES = new MatcherAutomaton("Rules", "RULES");
+    Automaton* QUERIES = new MatcherAutomaton("Queries", "QUERIES");
+
+    // Add all of the Automaton instances
+    //automata.push_back(new ColonAutomaton());
+    //automata.push_back(new ColonDashAutomaton());
+    automata.push_back(COMMA);
+    automata.push_back(PERIOD);
+    automata.push_back(Q_MARK);
+    automata.push_back(LEFT_PAREN);
+    automata.push_back(RIGHT_PAREN);
+    automata.push_back(COLON);
+    automata.push_back(COLON_DASH);
+    automata.push_back(MULTIPLY);
+    automata.push_back(ADD);
+    automata.push_back(SCHEMES);
+    automata.push_back(FACTS);
+    automata.push_back(RULES);
+    automata.push_back(QUERIES);
+
+}; 
 
 bool Lexer::run(string input) 
 {
@@ -10,15 +47,21 @@ bool Lexer::run(string input)
 
     while (input.size() > 0)
     {
+        cout << "input: " << input << endl;
         //set maxRead to 0
         maxRead = 0;
-        //set maxAutomaton to the first automaton in automata??
+        //set maxAutomaton to the first automaton in automata
+        maxAutomaton = automata[0];
 
-        // TODO: you need to handle whitespace inbetween tokens
-        // TODO: cannot handle whitespace after string, throws "out_of_range"
+        // handle whitespace inbetween and after tokens
         while (input[0] == ' ' || input[0] == '\n')
         {
-            //cout << "Accomadated for whitespace..." << endl;
+            cout << "Accomadated for whitespace..." << endl;
+            if (input.length() == 1) 
+            {
+                cout << "input length 1... EOF" << endl;
+                return true;
+            }
             input = input.substr(1);
         }
         
@@ -32,17 +75,20 @@ bool Lexer::run(string input)
             inputRead = automaton->Start(input);
             if (inputRead > maxRead) {
                 maxRead = inputRead;
-                //set maxAutomaton to automaton
+                maxAutomaton = automaton;
             }
         }
        
        if (maxRead > 0) 
        {
             //set newToken to maxAutomaton.CreateToken(...)
+            newToken = maxAutomaton->CreateToken(input.substr(0, maxRead)); //Maybe not inputRead?
             //increment lineNumber by maxAutomaton.NewLinesRead()
             //add newToken to collection of all tokens
+            tokens.push_back(newToken);
 
             cout << "maxRead: " << maxRead << endl;
+            
         }// No automaton accepted input; create invalid token
         else 
         {
@@ -56,12 +102,24 @@ bool Lexer::run(string input)
         //remove maxRead characters from input
 
         input = input.substr(maxRead);
+        cout << "substr: " << input << "substr size: " << input.length() << endl;
     }
 
     return true;
 }
 
+bool Lexer::output()
+{
+    Token* currentToken;
 
+    for (int j = 0; j < tokens.size(); j++)
+    {
+        currentToken = tokens[j];
+        currentToken->outputToken();
+    }
+
+    return true;
+}
 
 //Returns string of file formatted to mimick the file
 string Lexer::inputToString(string fileName)

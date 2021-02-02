@@ -13,9 +13,11 @@ protected:
     int newLines = 0;
 
     //TokenType type;
+    string type;
 
 public:
-    Automaton(/*TokenType type*/) { /*this->type = type;*/ }
+    Automaton(string type) { this->type = type; };
+    Automaton() = default;
     //virtual ~Automaton();
 
     // Start the automaton and return the number of characters read
@@ -23,10 +25,12 @@ public:
     // read > 0 indicates the input was accepted
     virtual int Start(const string& input) = 0;
 
-    /*
-    virtual Token* CreateToken(std::string input, int lineNumber) {
-        return new Token(type, input, lineNumber); }
-    */
+    
+    virtual Token* CreateToken(string input) //, int lineNumber 
+    {
+        return new Token(type, input); //lineNumber
+    }
+    
 
    //virtual int NewLinesRead() const { return newLines; }
 

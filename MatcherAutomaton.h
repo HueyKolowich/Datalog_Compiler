@@ -12,13 +12,17 @@ private:
     string toMatch;
 
 public:
-    MatcherAutomaton(string toMatch/*, TokeType type*/) { this->toMatch = toMatch; };
+    MatcherAutomaton(string toMatch, string type) 
+    {
+        this->toMatch = toMatch; 
+        this->type = type;
+    };
     //~MatcherAutomaton();
 
     int Start(const string& input);
 };
 
-int MatcherAutomaton::Start(const string& input)
+inline int MatcherAutomaton::Start(const string& input)
 {
     bool isMatch = true;
     int inputRead = 0;

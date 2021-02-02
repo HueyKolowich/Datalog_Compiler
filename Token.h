@@ -11,13 +11,24 @@ using namespace std;
 class Token 
 {
 private:
-    //type
+    string type;
     string input;
-    int lineNumber;
+    //int lineNumber;
 
 public:
-    Token();
+    Token(string type, string input) //lineNumber
+    {
+        this->type = type;
+        this->input = input;
+    };
     //virtual ~Token();
+
+    void outputToken();
 };
+
+inline void Token::outputToken()
+{
+    cout << "(" << type << ",\"" << input << "\"," << ")" << endl;
+}
 
 #endif

@@ -16,26 +16,20 @@ private:
     vector<Token*> tokens;
     vector<Automaton*> automata;
 
+    Token* newToken;
+    Automaton* maxAutomaton;
+
     int lineNum;
     int maxRead;
     
 public:
-    Lexer() 
-    {
-        tokens = vector<Token*>();
-        automata = vector<Automaton*>();
-
-        Automaton* Hello = new MatcherAutomaton("Hello");
-
-        // Add all of the Automaton instances
-        //automata.push_back(new ColonAutomaton());
-        //automata.push_back(new ColonDashAutomaton());
-        automata.push_back(Hello);
-    }
+    Lexer();
     //~Lexer();
 
     //Parallel and Max Lexer Function
     bool run(string);
+
+    bool output();
 
     string inputToString(string fileName);
 };
