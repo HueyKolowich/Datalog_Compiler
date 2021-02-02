@@ -62,10 +62,15 @@ inline void BlockAutomaton::s2(const string& input)
     while (input.at(inputRead) != '|')
     {
         // if EOF return error
+        if (input.at(inputRead) == '\n')
+        {
+            newLines++;
+        }
+
         inputRead++;
     }
 
-    // s3(input);
+    s3(input);
 }
 
 inline void BlockAutomaton::s3(const string& input)

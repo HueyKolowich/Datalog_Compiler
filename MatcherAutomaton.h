@@ -22,6 +22,7 @@ public:
     int Start(const string& input);
 };
 
+//Does Matcher need to handle newlines??
 inline int MatcherAutomaton::Start(const string& input)
 {
     bool isMatch = true;

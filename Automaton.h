@@ -26,13 +26,13 @@ public:
     virtual int Start(const string& input) = 0;
 
     
-    virtual Token* CreateToken(string input) //, int lineNumber 
+    virtual Token* CreateToken(string input, int lineNumber) 
     {
-        return new Token(type, input); //lineNumber
+        return new Token(type, input, lineNumber);
     }
     
 
-   //virtual int NewLinesRead() const { return newLines; }
+   virtual int NewLinesRead() const { return newLines; }
 
 };
 

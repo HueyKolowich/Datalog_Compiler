@@ -51,6 +51,8 @@ inline void CommentAutomaton::s1(const string& input)
     {
         inputRead++;
     }
+
+    //Shouldn't need to update newline.... I think
 }
 
 #endif

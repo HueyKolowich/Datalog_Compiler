@@ -25,8 +25,6 @@ Lexer::Lexer()
     Automaton* BLOCK = new BlockAutomaton("BLOCK");
 
     // Add all of the Automaton instances
-    //automata.push_back(new ColonAutomaton());
-    //automata.push_back(new ColonDashAutomaton());
     automata.push_back(COMMA);
     automata.push_back(PERIOD);
     automata.push_back(Q_MARK);
@@ -60,12 +58,17 @@ bool Lexer::run(string input)
         // handle whitespace inbetween and after tokens
         while (input[0] == ' ' || input[0] == '\n')
         {
+            if (input[0] == '\n')
+            {
+                lineNum++;
+            }
+            
             cout << "Accomadated for whitespace..." << endl;
             if (input.length() == 1) 
             {
                 //return EOF token and true
                 cout << "input length 1... EOF" << endl;
-                newToken = new Token("EOF", "");
+                newToken = new Token("EOF", "", lineNum);
                 tokens.push_back(newToken);
                 return true;
             }
@@ -89,10 +92,10 @@ bool Lexer::run(string input)
        if (maxRead > 0) 
        {
             //set newToken to maxAutomaton.CreateToken(...)
-            newToken = maxAutomaton->CreateToken(input.substr(0, maxRead));
+            newToken = maxAutomaton->CreateToken(input.substr(0, maxRead), lineNum);
 
             //increment lineNumber by maxAutomaton.NewLinesRead()
-
+            lineNum += maxAutomaton->NewLinesRead();
 
             //add newToken to collection of all tokens
             tokens.push_back(newToken);
@@ -127,6 +130,8 @@ bool Lexer::output()
         currentToken = tokens[j];
         currentToken->outputToken();
     }
+
+    cout << "Total Tokens = " << tokens.size() << endl;
 
     return true;
 }
