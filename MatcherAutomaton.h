@@ -25,7 +25,7 @@ public:
 inline int MatcherAutomaton::Start(const string& input)
 {
     bool isMatch = true;
-    int inputRead = 0;
+    inputRead = 0;
 
     for (int i = 0; i < toMatch.length() && isMatch; i++)
     {

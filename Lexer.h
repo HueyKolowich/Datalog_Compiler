@@ -10,6 +10,7 @@
 
 #include "MatcherAutomaton.h"
 #include "CommentAutomaton.h"
+#include "BlockAutomaton.h"
 
 class Lexer 
 {

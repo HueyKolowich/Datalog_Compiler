@@ -22,6 +22,7 @@ Lexer::Lexer()
     Automaton* RULES = new MatcherAutomaton("Rules", "RULES");
     Automaton* QUERIES = new MatcherAutomaton("Queries", "QUERIES");
     Automaton* COMMENT = new CommentAutomaton("COMMENT");
+    Automaton* BLOCK = new BlockAutomaton("BLOCK");
 
     // Add all of the Automaton instances
     //automata.push_back(new ColonAutomaton());
@@ -40,6 +41,7 @@ Lexer::Lexer()
     automata.push_back(RULES);
     automata.push_back(QUERIES);
     automata.push_back(COMMENT);
+    automata.push_back(BLOCK);
 
 }; 
 

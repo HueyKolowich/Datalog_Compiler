@@ -8,9 +8,6 @@
 
 class CommentAutomaton: public Automaton
 {
-private:
-    int inputRead;
-
 public:
     CommentAutomaton(string type)
     {
