@@ -9,6 +9,7 @@
 #include<vector>
 
 #include "MatcherAutomaton.h"
+#include "CommentAutomaton.h"
 
 class Lexer 
 {

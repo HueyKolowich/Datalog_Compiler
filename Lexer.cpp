@@ -21,6 +21,7 @@ Lexer::Lexer()
     Automaton* FACTS = new MatcherAutomaton("Facts", "FACTS");
     Automaton* RULES = new MatcherAutomaton("Rules", "RULES");
     Automaton* QUERIES = new MatcherAutomaton("Queries", "QUERIES");
+    Automaton* COMMENT = new CommentAutomaton("COMMENT");
 
     // Add all of the Automaton instances
     //automata.push_back(new ColonAutomaton());
@@ -38,6 +39,7 @@ Lexer::Lexer()
     automata.push_back(FACTS);
     automata.push_back(RULES);
     automata.push_back(QUERIES);
+    automata.push_back(COMMENT);
 
 }; 
 
@@ -59,7 +61,10 @@ bool Lexer::run(string input)
             cout << "Accomadated for whitespace..." << endl;
             if (input.length() == 1) 
             {
+                //return EOF token and true
                 cout << "input length 1... EOF" << endl;
+                newToken = new Token("EOF", "");
+                tokens.push_back(newToken);
                 return true;
             }
             input = input.substr(1);
@@ -82,8 +87,11 @@ bool Lexer::run(string input)
        if (maxRead > 0) 
        {
             //set newToken to maxAutomaton.CreateToken(...)
-            newToken = maxAutomaton->CreateToken(input.substr(0, maxRead)); //Maybe not inputRead?
+            newToken = maxAutomaton->CreateToken(input.substr(0, maxRead));
+
             //increment lineNumber by maxAutomaton.NewLinesRead()
+
+
             //add newToken to collection of all tokens
             tokens.push_back(newToken);
 
