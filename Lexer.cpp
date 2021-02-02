@@ -3,70 +3,67 @@
 
 #include "Lexer.h"
 
-/*
+
 bool Lexer::run(string input) 
 {
-    //Initialize two variables: maximum read value to 0 
-    //and corresponding maximum finitestate automaton 
-    //(denoted as the “max automaton”) to the first finite-state automaton
-    //in the collection
+    lineNum = 1;
 
-    //For each finite-state automaton
-        /*
-        Give it the input string and have it return whether or not it accepts the string
-        (first n-symbols of the string)
-        – Get the number of symbols (characters) read by it
-        – Update the maximum read value if more than the current value and then update
-        max automaton to reference the current finite-state automaton
-        */
+    while (input.size() > 0)
+    {
+        //set maxRead to 0
+        maxRead = 0;
+        //set maxAutomaton to the first automaton in automata??
 
-    //Now that we’ve found the finite-state automaton that will read the maximum amount
-    //of characters, tell it to generate a Token given the input it could accept
-
-    //Store new Token and update the input string (remove the characters read – remember
-    //the number of characters in stored in our variable
-
-    //While the input has more characters repeat
-
-    /*
-        set lineNumber to 1
-        // While there are more characters to tokenize
-        loop on input.size() > 0 {
-            set maxRead to 0
-            set maxAutomaton to the first automaton in automata
-            // TODO: you need to handle whitespace inbetween tokens
-
-            // Here is the "Parallel" part of the algorithm
-            // Each automaton runs with the same input
-            foreach automaton in automata {
-                inputRead = automaton.Start(input)
-                if (inputRead > maxRead) {
-                    set maxRead to inputRead
-                    set maxAutomaton to automaton
-                }
-            }
-            // Here is the "Max" part of the algorithm
-            if maxRead > 0 {
-                set newToken to maxAutomaton.CreateToken(...)
-                increment lineNumber by maxAutomaton.NewLinesRead()
-                add newToken to collection of all tokens
-            }
-            // No automaton accepted input; create invalid token
-            else {
-                set maxRead to 1
-                set newToken to a new invalid Token
-                (with first character of input)
-                add newToken to collection of all tokens
-            }
-            // Update ‘input‘ by removing characters read to create Token
-            remove maxRead characters from input
+        // TODO: you need to handle whitespace inbetween tokens
+        // TODO: cannot handle whitespace after string, throws "out_of_range"
+        while (input[0] == ' ' || input[0] == '\n')
+        {
+            //cout << "Accomadated for whitespace..." << endl;
+            input = input.substr(1);
         }
-    */
-//}
+        
+        // Each automaton runs with the same input
+        Automaton* automaton;
+        int inputRead;
+
+        for (int i = 0; i < automata.size(); i++)
+        {
+            automaton = automata[i];
+            inputRead = automaton->Start(input);
+            if (inputRead > maxRead) {
+                maxRead = inputRead;
+                //set maxAutomaton to automaton
+            }
+        }
+       
+       if (maxRead > 0) 
+       {
+            //set newToken to maxAutomaton.CreateToken(...)
+            //increment lineNumber by maxAutomaton.NewLinesRead()
+            //add newToken to collection of all tokens
+
+            cout << "maxRead: " << maxRead << endl;
+        }// No automaton accepted input; create invalid token
+        else 
+        {
+                //set maxRead to 1
+                maxRead = 1;
+                //set newToken to a new invalid Token
+                //(with first character of input)
+                //add newToken to collection of all tokens
+        }
+        // Update ‘input‘ by removing characters read to create Token
+        //remove maxRead characters from input
+
+        input = input.substr(maxRead);
+    }
+
+    return true;
+}
 
 
 
-
+//Returns string of file formatted to mimick the file
 string Lexer::inputToString(string fileName)
 {
     ifstream file (fileName.c_str());
