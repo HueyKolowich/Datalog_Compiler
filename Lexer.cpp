@@ -23,6 +23,7 @@ Lexer::Lexer()
     Automaton* QUERIES = new MatcherAutomaton("Queries", "QUERIES");
     Automaton* COMMENT = new CommentAutomaton("COMMENT");
     Automaton* BLOCK = new BlockAutomaton("BLOCK");
+    Automaton* ID = new IDAutomaton("ID");
 
     // Add all of the Automaton instances
     automata.push_back(COMMA);
@@ -38,6 +39,7 @@ Lexer::Lexer()
     automata.push_back(FACTS);
     automata.push_back(RULES);
     automata.push_back(QUERIES);
+    automata.push_back(ID);
     automata.push_back(COMMENT);
     automata.push_back(BLOCK);
 
@@ -49,7 +51,7 @@ bool Lexer::run(string input)
 
     while (input.size() > 0)
     {
-        cout << "input: " << input << endl;
+        cout << "input: " << input[0] << endl;
         //set maxRead to 0
         maxRead = 0;
         //set maxAutomaton to the first automaton in automata
@@ -61,6 +63,7 @@ bool Lexer::run(string input)
             if (input[0] == '\n')
             {
                 lineNum++;
+                // cout << "Is newline" << endl;
             }
             
             cout << "Accomadated for whitespace..." << endl;
@@ -72,8 +75,10 @@ bool Lexer::run(string input)
                 tokens.push_back(newToken);
                 return true;
             }
+
             input = input.substr(1);
         }
+        //cout << "Broke While" << endl;
         
         // Each automaton runs with the same input
         Automaton* automaton;
@@ -81,6 +86,7 @@ bool Lexer::run(string input)
 
         for (int i = 0; i < automata.size(); i++)
         {
+            cout << "Tommyton number: " << i << endl;
             automaton = automata[i];
             inputRead = automaton->Start(input);
             if (inputRead > maxRead) {
@@ -115,7 +121,7 @@ bool Lexer::run(string input)
         //remove maxRead characters from input
 
         input = input.substr(maxRead);
-        cout << "substr: " << input << "substr size: " << input.length() << endl;
+        cout << "substr: " << input[0] << "substr size: " << input.length() << endl;
     }
 
     return true;
@@ -151,6 +157,16 @@ string Lexer::inputToString(string fileName)
             outString = outString + line + '\n';
         }
     }
+
+    if (outString.length() >= 1)
+    {
+        while (outString.back() == '\n')
+        {
+            outString.pop_back();
+        }
+    }
+    
+    outString.push_back('\n');
 
     file.close();
 

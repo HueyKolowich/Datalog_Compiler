@@ -22,6 +22,8 @@ public:
 
 inline int CommentAutomaton::Start(const string& input)
 {
+    cout << "Entered Comment" << endl;
+    
     inputRead = 0;
 
     s0(input);
@@ -33,6 +35,9 @@ inline void CommentAutomaton::s0(const string& input)
 {
     //Start State
     //Needs '#' -> Comment Character
+
+    cout << "Entered s0" << endl;
+    cout << "input: " << input.at(inputRead) << endl;
 
     if (input.at(inputRead) == '#')
     {
@@ -47,12 +52,19 @@ inline void CommentAutomaton::s1(const string& input)
     //Changes state when '\n' or EOF is found
     //Fails if '\n' or EOF are not found
 
+    cout << "Entered s1" << endl;
+    cout << "input: " << input.at(inputRead) << endl;
+
     while (input.at(inputRead) != '\n') //need to accomadate for end of file, diff with lab computer?
     {
         inputRead++;
     }
 
     //Shouldn't need to update newline.... I think
+    inputRead++;
+    cout << "Input read added to" << endl;
+    newLines++;
+    cout << "New Lines added to" << endl;
 }
 
 #endif

@@ -29,6 +29,7 @@ public:
 
 inline void Token::outputToken()
 {
+    //Handle comment with newline afterwards
     cout << "(" << type << ",\"" << input << "\"," << lineNumber << ")" << endl;
 }
 

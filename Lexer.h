@@ -11,6 +11,7 @@
 #include "MatcherAutomaton.h"
 #include "CommentAutomaton.h"
 #include "BlockAutomaton.h"
+#include "IDAutomaton.h"
 
 class Lexer 
 {
