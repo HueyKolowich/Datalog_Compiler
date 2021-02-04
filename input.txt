@@ -1,2 +1,8 @@
 # COPYRIGHT © BRIGHAM YOUNG UNIVERSITY CS 236
 # FOR USE ONLY DURING FALL 2020 SEMESTSER
+
+
+#||##||# Schemes:
+#||##||#   snap(S,N,A,P)
+#||##||#   csg(C,S,G)
+#||##||#   cp(C,Q)

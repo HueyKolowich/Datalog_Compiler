@@ -22,9 +22,11 @@ public:
 
 inline int IDAutomaton::Start(const string& input)
 {
-    cout << "Entered ID with input..." << input.at(0) << "..." << endl;
-
     inputRead = 0;
+
+    overrideMax = false;
+
+    undefined = false;
 
     s0(input);
     
@@ -36,7 +38,7 @@ inline void IDAutomaton::s0(const string& input)
     //Start State
     //Needs a letter character
 
-    cout << "Entered IDs0 with input..." << input.at(inputRead) << "..." << endl;
+    //cout << "Entered ID with input..." << input.at(0) << "..." << endl;
 
     if (isalpha(input.at(inputRead)))
     {
@@ -50,12 +52,19 @@ inline void IDAutomaton::s1(const string& input)
     //Start State
     //Needs a letter character
 
-    cout << "Entered IDs1 with input..." << input.at(inputRead) << "..." << endl;
-
-    while (!isspace(input.at(inputRead))) //need to accomadate for end of file, diff with lab computer?
+    while (!isspace(input.at(inputRead))  
+                && ( (input.at(inputRead) != ':') 
+                && (input.at(inputRead) != '+') 
+                && (input.at(inputRead) != '*')
+                && (input.at(inputRead) != ')')
+                && (input.at(inputRead) != '(')
+                && (input.at(inputRead) != '?')
+                && (input.at(inputRead) != '.')
+                && (input.at(inputRead) != ',')
+                && (input.at(inputRead) != '#')) ) //need to accomadate for end of file, diff with lab computer?
     {
         inputRead++;
-        cout << "While Input..." << input.at(inputRead) << "..." << endl;
+        //cout << "While Input..." << input.at(inputRead) << "..." << endl;
     }
 }
 

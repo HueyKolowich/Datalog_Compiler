@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "1-70:1"
+diff 1-70/answer1.txt <(./Project1 1-70/input1.txt | cat)
+echo "1-70:3"
+diff 1-70/answer3.txt <(./Project1 1-70/input3.txt | cat)
+echo "1-70:4"
+diff 1-70/answer4.txt <(./Project1 1-70/input4.txt | cat)
+echo "1-70:5"
+diff 1-70/answer5.txt <(./Project1 1-70/input5.txt | cat)
+echo "1-70:6"
+diff 1-70/answer6.txt <(./Project1 1-70/input6.txt | cat)
+echo "1-70:7"
+diff 1-70/answer7.txt <(./Project1 1-70/input7.txt | cat)
+echo "1-70:noway"
+diff 1-70/answernoway.txt <(./Project1 1-70/inputnoway.txt | cat)
+echo "1-90:1"
+diff 1-90/answer1.txt <(./Project1 1-90/input1.txt | cat)
+echo "1-90:2"
+diff 1-90/answer2.txt <(./Project1 1-90/input2.txt | cat)
+echo "1-90:3"
+diff 1-90/answer3.txt <(./Project1 1-90/input3.txt | cat)
+echo "1-100:1"
+diff 1-100/answer1.txt <(./Project1 1-100/input1.txt | cat)
+echo "1-100:2"
+diff 1-100/answer2.txt <(./Project1 1-100/input2.txt | cat)

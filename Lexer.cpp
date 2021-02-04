@@ -22,8 +22,9 @@ Lexer::Lexer()
     Automaton* RULES = new MatcherAutomaton("Rules", "RULES");
     Automaton* QUERIES = new MatcherAutomaton("Queries", "QUERIES");
     Automaton* COMMENT = new CommentAutomaton("COMMENT");
-    Automaton* BLOCK = new BlockAutomaton("BLOCK");
+    Automaton* BLOCK = new BlockAutomaton("COMMENT");
     Automaton* ID = new IDAutomaton("ID");
+    Automaton* STRING = new StringAutomaton("STRING");
 
     // Add all of the Automaton instances
     automata.push_back(COMMA);
@@ -42,6 +43,7 @@ Lexer::Lexer()
     automata.push_back(ID);
     automata.push_back(COMMENT);
     automata.push_back(BLOCK);
+    automata.push_back(STRING);
 
 }; 
 
@@ -49,34 +51,40 @@ bool Lexer::run(string input)
 {
     lineNum = 1;
 
+    string undToString;
+
     while (input.size() > 0)
     {
-        cout << "input: " << input[0] << endl;
+        //cout << "input: " << input[0] << " lineNumber: " << lineNum << endl;
+
         //set maxRead to 0
         maxRead = 0;
         //set maxAutomaton to the first automaton in automata
         maxAutomaton = automata[0];
 
         // handle whitespace inbetween and after tokens
-        while (input[0] == ' ' || input[0] == '\n')
+        while (input[0] == ' ' || input[0] == '\n' || input[0] == '\t')
         {
-            if (input[0] == '\n')
+            if (input[0] == '\n' && (input.length() != 1))
             {
+                //cout << "LineNum increment" << endl;
                 lineNum++;
-                // cout << "Is newline" << endl;
             }
             
-            cout << "Accomadated for whitespace..." << endl;
+            //cout << "Accomadated for whitespace..." << endl;
             if (input.length() == 1) 
             {
                 //return EOF token and true
-                cout << "input length 1... EOF" << endl;
+                //cout << "input length 1... EOF" << endl;
+                //cout << "LineNum increment" << endl;
+                lineNum++;
                 newToken = new Token("EOF", "", lineNum);
                 tokens.push_back(newToken);
                 return true;
             }
 
             input = input.substr(1);
+            //cout << "New Input: " << input.at(0) << endl;
         }
         //cout << "Broke While" << endl;
         
@@ -86,42 +94,66 @@ bool Lexer::run(string input)
 
         for (int i = 0; i < automata.size(); i++)
         {
-            cout << "Tommyton number: " << i << endl;
             automaton = automata[i];
             inputRead = automaton->Start(input);
+
             if (inputRead > maxRead) {
+                maxRead = inputRead;
+                maxAutomaton = automaton;
+            } else if ((i == 15) && (automaton->getOverride()))
+            {
                 maxRead = inputRead;
                 maxAutomaton = automaton;
             }
         }
        
        if (maxRead > 0) 
-       {
-            //set newToken to maxAutomaton.CreateToken(...)
-            newToken = maxAutomaton->CreateToken(input.substr(0, maxRead), lineNum);
+       {    
+            //cout << "\nMaxAutomaton: " << maxAutomaton->getType() << " : " << input.substr(0, maxRead) << endl;
 
-            //increment lineNumber by maxAutomaton.NewLinesRead()
-            lineNum += maxAutomaton->NewLinesRead();
+            if (maxAutomaton->getUndefined())
+            {
+                newToken = maxAutomaton->CreateUndefinedToken(input.substr(0, maxRead), lineNum);
+            } else
+            {
+                newToken = maxAutomaton->CreateToken(input.substr(0, maxRead), lineNum);
+            }
 
-            //add newToken to collection of all tokens
             tokens.push_back(newToken);
 
-            cout << "maxRead: " << maxRead << endl;
-            
-        }// No automaton accepted input; create invalid token
-        else 
-        {
-                //set maxRead to 1
-                maxRead = 1;
-                //set newToken to a new invalid Token
-                //(with first character of input)
-                //add newToken to collection of all tokens
-        }
-        // Update ‘input‘ by removing characters read to create Token
-        //remove maxRead characters from input
+            //cout << "New Lines: " << maxAutomaton->NewLinesRead() << endl;
+            lineNum += maxAutomaton->NewLinesRead();
 
+            //cout << "maxRead: " << maxRead << endl;
+        } else // No automaton accepted input; create invalid token 
+        { 
+            //cout << "Undefined Token:" << input.at(0) << endl;
+
+            //set maxRead to 1
+            maxRead = 1;
+            //set newToken to a new invalid Token (with first character of input)
+            undToString = input.at(0);
+
+            newToken = new Token("UNDEFINED", undToString, lineNum);
+            //add newToken to collection of all tokens
+            tokens.push_back(newToken);
+        }
+
+        // Update ‘input‘ by removing characters read to create Token
+        //remove maxRead characters from input 
         input = input.substr(maxRead);
-        cout << "substr: " << input[0] << "substr size: " << input.length() << endl;
+        //cout << "substr: " << input[0] << "substr size: " << input.length() << "\n\n" << endl;
+    }
+
+    Token* eofToken;
+    int lastTokenNum = (tokens.size() - 1);
+    
+    eofToken = tokens[lastTokenNum];
+
+    if (eofToken->getTokenType() != "EOF") 
+    {
+        newToken = new Token("EOF", "", lineNum);
+        tokens.push_back(newToken);
     }
 
     return true;
@@ -137,7 +169,7 @@ bool Lexer::output()
         currentToken->outputToken();
     }
 
-    cout << "Total Tokens = " << tokens.size() << endl;
+    cout << "Total Tokens = " << tokens.size();
 
     return true;
 }
@@ -157,16 +189,6 @@ string Lexer::inputToString(string fileName)
             outString = outString + line + '\n';
         }
     }
-
-    if (outString.length() >= 1)
-    {
-        while (outString.back() == '\n')
-        {
-            outString.pop_back();
-        }
-    }
-    
-    outString.push_back('\n');
 
     file.close();
 

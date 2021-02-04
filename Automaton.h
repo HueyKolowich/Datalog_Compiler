@@ -12,6 +12,9 @@ protected:
     int inputRead = 0;
     int newLines = 0;
 
+    bool overrideMax = false;
+    bool undefined = false;
+
     //TokenType type;
     string type;
 
@@ -31,8 +34,18 @@ public:
         return new Token(type, input, lineNumber);
     }
     
+    virtual Token* CreateUndefinedToken(string input, int lineNumber) 
+    {
+        return new Token("UNDEFINED", input, lineNumber);
+    }
 
    virtual int NewLinesRead() const { return newLines; }
+
+   virtual string getType() const { return type; }
+
+   virtual bool getOverride() const { return overrideMax; }
+
+   virtual bool getUndefined() const { return undefined; }
 
 };
 

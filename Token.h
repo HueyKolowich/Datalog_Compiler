@@ -25,6 +25,7 @@ public:
     //virtual ~Token();
 
     void outputToken();
+    string getTokenType() { return type; }
 };
 
 inline void Token::outputToken()

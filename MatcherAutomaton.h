@@ -25,6 +25,12 @@ public:
 //Does Matcher need to handle newlines??
 inline int MatcherAutomaton::Start(const string& input)
 {
+    //cout << "Entered Matcher with input..." << input.at(0) << "..." << endl;
+
+    overrideMax = false;
+
+    undefined = false;
+    
     bool isMatch = true;
     inputRead = 0;
 
