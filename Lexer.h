@@ -28,7 +28,17 @@ private:
     
 public:
     Lexer();
-    //~Lexer();
+    virtual ~Lexer() 
+    {
+        for (unsigned int i = 0; i < automata.size(); i++)
+        {
+            delete automata[i];
+        }
+        for (unsigned int j = 0; j < tokens.size(); j++)
+        {
+            delete tokens[j];
+        }
+    };
 
     //Parallel and Max Lexer Function
     bool run(string);

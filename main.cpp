@@ -62,7 +62,7 @@ bool lexerTests(bool argv1, char* argv1_c)
 
     //cout << "######################################\n\n" << endl;
 
-    //delete lexy;
+    delete lexy;
     //cout << "Testing Complete." << endl;
 
     return true;

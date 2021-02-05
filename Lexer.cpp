@@ -92,7 +92,7 @@ bool Lexer::run(string input)
         Automaton* automaton;
         int inputRead;
 
-        for (int i = 0; i < automata.size(); i++)
+        for (unsigned int i = 0; i < automata.size(); i++)
         {
             automaton = automata[i];
             inputRead = automaton->Start(input);
@@ -146,11 +146,19 @@ bool Lexer::run(string input)
     }
 
     Token* eofToken;
-    int lastTokenNum = (tokens.size() - 1);
-    
-    eofToken = tokens[lastTokenNum];
 
-    if (eofToken->getTokenType() != "EOF") 
+    if (tokens.size() > 0) 
+    {
+        int lastTokenNum = (tokens.size() - 1);
+
+        eofToken = tokens[lastTokenNum];
+
+        if (eofToken->getTokenType() != "EOF") 
+        {
+            newToken = new Token("EOF", "", lineNum);
+            tokens.push_back(newToken);
+        }
+    } else 
     {
         newToken = new Token("EOF", "", lineNum);
         tokens.push_back(newToken);
@@ -163,7 +171,7 @@ bool Lexer::output()
 {
     Token* currentToken;
 
-    for (int j = 0; j < tokens.size(); j++)
+    for (unsigned int j = 0; j < tokens.size(); j++)
     {
         currentToken = tokens[j];
         currentToken->outputToken();

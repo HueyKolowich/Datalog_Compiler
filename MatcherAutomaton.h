@@ -34,7 +34,7 @@ inline int MatcherAutomaton::Start(const string& input)
     bool isMatch = true;
     inputRead = 0;
 
-    for (int i = 0; i < toMatch.length() && isMatch; i++)
+    for (unsigned int i = 0; i < toMatch.length() && isMatch; i++)
     {
         if (input[i] != toMatch[i])
         {

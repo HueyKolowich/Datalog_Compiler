@@ -21,7 +21,7 @@ protected:
 public:
     Automaton(string type) { this->type = type; };
     Automaton() = default;
-    //virtual ~Automaton();
+    virtual ~Automaton() = default;
 
     // Start the automaton and return the number of characters read
     // read == 0 indicates the input was rejected
