@@ -182,6 +182,11 @@ bool Lexer::output()
     return true;
 }
 
+vector<Token*> Lexer::getTokens()
+{
+    return this->tokens;
+}
+
 //Returns string of file formatted to mimick the file
 string Lexer::inputToString(string fileName)
 {

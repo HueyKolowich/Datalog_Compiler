@@ -45,6 +45,8 @@ public:
 
     bool output();
 
+    vector<Token*> getTokens();
+
     string inputToString(string fileName);
 };
 
