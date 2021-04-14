@@ -1,2 +1,2 @@
-Compiler: main.cpp Lexer.h Lexer.cpp Automaton.h Token.h MatcherAutomaton.h CommentAutomaton.h BlockAutomaton.h IDAutomaton.h StringAutomaton.h Parser.h Parser.cpp
+Compiler: main.cpp Lexer.h Lexer.cpp Automaton.h Token.h MatcherAutomaton.h CommentAutomaton.h BlockAutomaton.h IDAutomaton.h StringAutomaton.h Parser.h Parser.cpp DatalogProgram.h Predicate.h Rule.h Parameter.h
 	g++ -Wall -Werror -std=c++17 -g *.cpp -o Compiler

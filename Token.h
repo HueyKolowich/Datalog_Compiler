@@ -26,6 +26,7 @@ public:
 
     void outputToken();
     string getTokenType() { return type; }
+    string getTokenInput() { return input; }
 };
 
 inline void Token::outputToken()

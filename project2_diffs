@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "2-80:0"
+diff 2-passoff-cases/2-80/answer0.txt <(./Compiler 2-passoff-cases/2-80/input0.txt | cat)
+echo "2-80:1"
+diff 2-passoff-cases/2-80/answer1.txt <(./Compiler 2-passoff-cases/2-80/input1.txt | cat)
+echo "2-80:2"
+diff 2-passoff-cases/2-80/answer2.txt <(./Compiler 2-passoff-cases/2-80/input2.txt | cat)
+echo "2-80:3"
+diff 2-passoff-cases/2-80/answer3.txt <(./Compiler 2-passoff-cases/2-80/input3.txt | cat)
+echo "2-80:4"
+diff 2-passoff-cases/2-80/answer4.txt <(./Compiler 2-passoff-cases/2-80/input4.txt | cat)
+echo "2-80:5"
+diff 2-passoff-cases/2-80/answer5.txt <(./Compiler 2-passoff-cases/2-80/input5.txt | cat)
+echo "2-80:6"
+diff 2-passoff-cases/2-80/answer6.txt <(./Compiler 2-passoff-cases/2-80/input6.txt | cat)
+echo "2-80:7"
+diff 2-passoff-cases/2-80/answer7.txt <(./Compiler 2-passoff-cases/2-80/input7.txt | cat)
+echo "2-80:8"
+diff 2-passoff-cases/2-80/answer8.txt <(./Compiler 2-passoff-cases/2-80/input8.txt | cat)
+echo "2-100:0"
+diff 2-passoff-cases/2-100/answer0.txt <(./Compiler 2-passoff-cases/2-100/input0.txt | cat)
+echo "2-100:1"
+diff 2-passoff-cases/2-100/answer1.txt <(./Compiler 2-passoff-cases/2-100/input1.txt | cat)
+echo "2-100:2"
+diff 2-passoff-cases/2-100/answer2.txt <(./Compiler 2-passoff-cases/2-100/input2.txt | cat)

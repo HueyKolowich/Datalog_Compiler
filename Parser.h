@@ -8,16 +8,25 @@
 #include<vector>
 
 #include"Token.h"
+#include"DatalogProgram.h"
 
 class Parser
 {
 private:
     vector<Token*> tokens;
+    vector<string> memory;
+    DatalogProgram* datalogProgram;
 
-    int currentTokenNum;
+    unsigned int currentTokenNum;
+    unsigned int secondaryRulesListLength;
+    unsigned int numSchemes;
+    unsigned int numFacts;
+    unsigned int numQueries;
+    unsigned int numRules;
 
     void checkToken(string);
     void checkStatus(string);
+    void viewStructure(vector<Token*>);
 
     void parseDatalogProgram();
 
@@ -42,6 +51,9 @@ private:
     void parseParameter();
     void parseExpression();
     void parseOperator();
+
+    void addMem(string);
+    void clearMem();
 
 public:
     Parser(vector<Token*>);

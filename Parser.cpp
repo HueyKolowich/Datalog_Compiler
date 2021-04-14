@@ -13,22 +13,33 @@ bool Parser::run()
 {
     // NEED TO CHECK FOR CASE WITH 0 TOKENS
 
-    cout << "Parser RUN:" << endl;
+    numSchemes = 0;
+    numFacts = 0;
+    numQueries = 0;
+    numRules = 0;
 
-    cout << "Tokens:" << endl;
-    for (unsigned int i = 0; i < tokens.size(); i++)
-    {
-        tokens[i]->outputToken();
-    }
+    // cout << "Tokens:" << endl;
+    // for (unsigned int i = 0; i < tokens.size(); i++)
+    // {
+    //     tokens[i]->outputToken();
+    // }
 
-    cout << "\n########################################################\n" << endl;
+    // cout << "\n########################################################\n" << endl;
 
     try {
+        datalogProgram = new DatalogProgram();
+        
         parseDatalogProgram();
 
-        cout << "Run Sucess!" << endl;
+        cout << "Success!" << endl;
+
+        datalogProgram->toString(numSchemes, numFacts, numQueries, numRules);
+
+        delete datalogProgram;
     } catch (Token error) {
-        cout << "Run Failure!" << endl;
+        cout << "Failure!" << endl;
+        cout << "  ";
+        error.outputToken();
     }
 
     return true;
@@ -36,13 +47,13 @@ bool Parser::run()
 
 void Parser::checkToken(string _correctType) 
 {
-    cout << "Checking token (" << tokens[currentTokenNum]->getTokenType() << ") against (" << _correctType << ")" << endl;
+    // cout << "Checking token (" << tokens[currentTokenNum]->getTokenType() << ") against (" << _correctType << ")" << endl;
 
     if (tokens[currentTokenNum]->getTokenType() == "COMMENT")
     {
         while (tokens[currentTokenNum]->getTokenType() == "COMMENT")
         {
-        cout << "Clearing COMMENT" << endl;
+        // cout << "Clearing COMMENT" << endl;
         currentTokenNum++;
         }
 
@@ -51,7 +62,7 @@ void Parser::checkToken(string _correctType)
             return;
         }
 
-        cout << "Checking token (" << tokens[currentTokenNum]->getTokenType() << ") against (" << _correctType << ")" << endl;
+        // cout << "Checking token (" << tokens[currentTokenNum]->getTokenType() << ") against (" << _correctType << ")" << endl;
     } else if (_correctType == "COMMENT")
     {
         return;
@@ -59,11 +70,11 @@ void Parser::checkToken(string _correctType)
     
     if (tokens[currentTokenNum]->getTokenType() == _correctType)
     {
-        cout << "Correct Token found!" << endl;
+        // cout << "Correct Token found!" << endl;
         currentTokenNum++;
     } else
     {
-        cout << "Incorrect Token found!" << endl;
+        // cout << "Incorrect Token found!" << endl;
         throw *tokens[currentTokenNum];
     }
 }
@@ -88,11 +99,19 @@ void Parser::checkStatus(string _nonterminal)
     cout << endl;
 }
 
+void Parser::viewStructure(vector<Token*> _tokens)
+{
+    for (unsigned int i = 0; i < _tokens.size(); i++)
+    {
+        tokens[i]->outputToken();
+    }
+}
+
 void Parser::parseDatalogProgram()
 {
     // SCHEMES COLON scheme schemeList FACTS COLON factList RULES COLON ruleList QUERIES COLON query queryList EOF
     
-    cout << "parseDatalogProgram:" << endl;
+    // cout << "parseDatalogProgram:" << endl;
 
     checkToken("SCHEMES");
     checkToken("COLON");
@@ -115,7 +134,7 @@ void Parser::parseSchemeList()
 {
     // scheme schemeList | lambda
 
-    checkStatus("parseSchemeList");
+    // checkStatus("parseSchemeList");
 
     checkToken("COMMENT");
 
@@ -133,7 +152,7 @@ void Parser::parseFactList()
 {
     // fact factList | lambda
 
-    checkStatus("parseFactList");
+    // checkStatus("parseFactList");
 
     checkToken("COMMENT");
 
@@ -151,7 +170,7 @@ void Parser::parseRuleList()
 {
     // rule ruleList | lambda
 
-    checkStatus("parseRuleList");
+    // checkStatus("parseRuleList");
 
     checkToken("COMMENT");
 
@@ -169,7 +188,7 @@ void Parser::parseQueryList()
 {
     // query queryList | lambda
     
-    checkStatus("parseQueryList");
+    // checkStatus("parseQueryList");
 
     checkToken("COMMENT");
 
@@ -187,90 +206,138 @@ void Parser::parseScheme()
 {
     // ID LEFT_PAREN ID idList RIGHT_PAREN
     
-    checkStatus("parseScheme");
+    // checkStatus("parseScheme");
 
     checkToken("ID");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("LEFT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("ID");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     parseIdList();
     checkToken("RIGHT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
+
+    // viewStructure(memory);
+    datalogProgram->addPredicate(memory);
+    numSchemes++;
+
+    clearMem();
 }
 
 void Parser::parseFact()
 {
     // ID LEFT_PAREN STRING stringList RIGHT_PAREN PERIOD
 
-    checkStatus("parseFact");
+    // checkStatus("parseFact");
 
     checkToken("ID");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("LEFT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("STRING");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
+    datalogProgram->addParameter(tokens[(currentTokenNum - 1)]->getTokenInput());
     parseStringList();
     checkToken("RIGHT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("PERIOD");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
+
+    // viewStructure(memory);
+    datalogProgram->addPredicate(memory);
+    numFacts++;
+
+    clearMem();
 }
 
 void Parser::parseRule()
 {
     // headPredicate COLON_DASH predicate predicateList PERIOD
 
-    checkStatus("parseRule");
+    // checkStatus("parseRule");
+
+    secondaryRulesListLength = 0;
 
     parseHeadPredicate();
     checkToken("COLON_DASH");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     parsePredicate();
+    secondaryRulesListLength++;
     parsePredicateList();
     checkToken("PERIOD");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
+
+    datalogProgram->addRule(memory, secondaryRulesListLength);
+    numRules++;
+
+    clearMem();
 }
 
 void Parser::parseQuery()
 {
     // predicate Q_MARK
     
-    checkStatus("parseQuery");
+    // checkStatus("parseQuery");
 
     parsePredicate();
     checkToken("Q_MARK");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
+
+    // viewStructure(memory);
+    datalogProgram->addPredicate(memory);
+    numQueries++;
+
+    clearMem();
 }
 
 void Parser::parseHeadPredicate()
 {
     // ID LEFT_PAREN ID idList RIGHT_PAREN
 
-    checkStatus("parseHeadPredicate");
+    // checkStatus("parseHeadPredicate");
 
     checkToken("ID");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("LEFT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("ID");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     parseIdList();
     checkToken("RIGHT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
 }
 
 void Parser::parsePredicate()
 {
     // ID LEFT_PAREN parameter parameterList RIGHT_PAREN
     
-    checkStatus("parsePredicate");
+    // checkStatus("parsePredicate");
 
     checkToken("ID");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     checkToken("LEFT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     parseParameter();
     parseParameterList();
     checkToken("RIGHT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
 }
 
 void Parser::parsePredicateList()
 {
     // COMMA predicate predicateList | lambda
     
-    checkStatus("parsePredicateList");
+    // checkStatus("parsePredicateList");
 
     checkToken("COMMENT");
 
     if (tokens[currentTokenNum]->getTokenType() == "COMMA")
     {
         checkToken("COMMA");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
         parsePredicate();
+        secondaryRulesListLength++;
         parsePredicateList();
     } else 
     {
@@ -282,13 +349,14 @@ void Parser::parseParameterList()
 {
     // COMMA parameter parameterList | lambda
     
-    checkStatus("parseParameterList");
+    // checkStatus("parseParameterList");
 
     checkToken("COMMENT");
 
     if (tokens[currentTokenNum]->getTokenType() == "COMMA")
     {
         checkToken("COMMA");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
         parseParameter();
         parseParameterList();
     } else 
@@ -301,14 +369,17 @@ void Parser::parseStringList()
 {
     // COMMA STRING stringList | lambda
     
-    checkStatus("parseStringList");
+    // checkStatus("parseStringList");
 
     checkToken("COMMENT");
 
     if (tokens[currentTokenNum]->getTokenType() == "COMMA")
     {
         checkToken("COMMA");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
         checkToken("STRING");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
+        datalogProgram->addParameter(tokens[(currentTokenNum - 1)]->getTokenInput());
         parseStringList();
     } else 
     {
@@ -320,14 +391,16 @@ void Parser::parseIdList()
 {
     // COMMA ID idList | lambda
     
-    checkStatus("parseIdList");
+    // checkStatus("parseIdList");
 
     checkToken("COMMENT");
 
     if (tokens[currentTokenNum]->getTokenType() == "COMMA")
     {
         checkToken("COMMA");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
         checkToken("ID");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
         parseIdList();
     } else 
     {
@@ -339,16 +412,18 @@ void Parser::parseParameter()
 {
     // STRING | ID | expression
 
-    checkStatus("parseParameter");
+    // checkStatus("parseParameter");
 
     checkToken("COMMENT");
 
     if (tokens[currentTokenNum]->getTokenType() == "STRING")
     {
         checkToken("STRING");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     } else if (tokens[currentTokenNum]->getTokenType() == "ID")
     {
         checkToken("ID");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     } else if (tokens[currentTokenNum]->getTokenType() == "LEFT_PAREN")
     {
         parseExpression();
@@ -362,31 +437,47 @@ void Parser::parseExpression()
 {
     // LEFT_PAREN parameter operator parameter RIGHT_PAREN
 
-    checkStatus("parseExpression");
+    // checkStatus("parseExpression");
 
     checkToken("LEFT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     parseParameter();
     parseOperator();
     parseParameter();
     checkToken("RIGHT_PAREN");
+    addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
 }
 
 void Parser::parseOperator()
 {
     // ADD | MULTIPLY
 
-    checkStatus("parseOperator");
+    // checkStatus("parseOperator");
 
     checkToken("COMMENT");
 
     if (tokens[currentTokenNum]->getTokenType() == "ADD")
     {
         checkToken("ADD");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     } else if (tokens[currentTokenNum]->getTokenType() == "MULTIPLY")
     {
         checkToken("MULTIPLY");
+        addMem(tokens[(currentTokenNum - 1)]->getTokenInput());
     } else 
     {
         throw *tokens[currentTokenNum];
     }
+}
+
+void Parser::addMem(string _tokenInput)
+{
+    // cout << "addMem: " << token->getTokenType() << endl;
+    memory.push_back(_tokenInput);
+}
+
+void Parser::clearMem()
+{
+    // cout << "clearMem" << endl;
+    memory.clear();
 }
